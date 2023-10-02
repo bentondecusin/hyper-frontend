@@ -2,6 +2,8 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { urls } from "./urls";
 import UrlButton from "./UrlButton";
 import { Card, ICard } from "./Card";
+import DragDropBox from "./DragDropBox";
+
 import { clearIndex, crawlDocument } from "./utils";
 
 import { Button } from "./Button";
@@ -55,10 +57,11 @@ export const Context: React.FC<ContextProps> = ({ className, selected }) => {
       className={`flex flex-col border-2 overflow-y-auto rounded-lg border-gray-500 w-full ${className}`}
     >
       <div className="flex flex-col items-start sticky top-0 w-full">
-        <div className="flex flex-col items-start lg:flex-row w-full lg:flex-wrap p-2">
+        {/* <div className="flex flex-col items-start lg:flex-row w-full lg:flex-wrap p-2">
           {buttons}
-        </div>
-        <div className="flex-grow w-full px-4">
+        </div> */}
+
+        {/* <div className="flex-grow w-full px-4">
           <Button
             className="w-full my-2 uppercase active:scale-[98%] transition-transform duration-100"
             style={{
@@ -69,9 +72,13 @@ export const Context: React.FC<ContextProps> = ({ className, selected }) => {
           >
             Clear Index
           </Button>
+        </div> */}
+
+        <div className="text-left w-full flex flex-col rounded-b-lg bg-gray-600 p-3 subpixel-antialiased">
+          <DragDropBox />
         </div>
         <div className="flex p-2"></div>
-        <div className="text-left w-full flex flex-col rounded-b-lg bg-gray-600 p-3 subpixel-antialiased">
+        {/* <div className="text-left w-full flex flex-col rounded-b-lg bg-gray-600 p-3 subpixel-antialiased">
           <DropdownLabel htmlFor="splittingMethod">
             Splitting Method:
           </DropdownLabel>
@@ -116,14 +123,14 @@ export const Context: React.FC<ContextProps> = ({ className, selected }) => {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
-      <div className="flex flex-wrap w-full">
+      {/* <div className="flex flex-wrap w-full">
         {cards &&
           cards.map((card, key) => (
             <Card key={key} card={card} selected={selected} />
           ))}
-      </div>
+      </div> */}
     </div>
   );
 };

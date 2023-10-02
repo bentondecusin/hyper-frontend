@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3030",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -15,6 +15,7 @@
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "ai": "^2.1.16",
+    "chart.js": "^4.4.0",
     "cheerio": "^1.0.0-rc.12",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
@@ -22,18 +23,21 @@
     "next": "13.4.9",
     "node-html-markdown": "^1.3.0",
     "openai-edge": "^1.2.0",
+    "pg": "^8.11.3",
     "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "react-markdown": "^8.0.7",
     "sswr": "^2.0.0",
-    "svelte": "^3.29.0",
+    "svelte": "^4.2.1",
     "tailwindcss": "3.3.2",
     "typescript": "5.1.6",
     "unified": "^10.1.2",
     "vue": "^3.3.4"
   },
   "devDependencies": {
-    "@types/md5": "^2.3.2"
+    "@types/md5": "^2.3.2",
+    "@types/pg": "^8.10.3"
   }
 }

@@ -4,21 +4,21 @@ import React, { FormEvent, ChangeEvent } from "react";
 import Messages from "./Messages";
 import { Message } from "ai/react";
 
-interface Chat {
+interface QueryBox {
   input: string;
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleMessageSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   messages: Message[];
 }
 
-const Chat: React.FC<Chat> = ({
+const QueryBox: React.FC<QueryBox> = ({
   input,
   handleInputChange,
   handleMessageSubmit,
   messages,
 }) => {
   return (
-    <div id="chat" className="flex flex-col w-full lg:w-3/5 mr-4 mx-5 lg:mx-0">
+    <div id="chat" className="flex flex-col w-full lg:w-3/5 mr-4 mx-8 lg:mx-8">
       <Messages messages={messages} />
       <>
         <form
@@ -41,4 +41,4 @@ const Chat: React.FC<Chat> = ({
   );
 };
 
-export default Chat;
+export default QueryBox;
