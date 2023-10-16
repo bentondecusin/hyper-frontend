@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json({
       success: true,
-      props: { events: JSON.parse(JSON.stringify(events)) },
+      props: { sql_result: JSON.parse(JSON.stringify(events)) },
     });
   } catch (err: any) {
     return NextResponse.json({

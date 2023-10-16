@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import QueryBox from "@/components/QueryBox";
 import DataFrame from "./components/DataFrame";
 import DataPlot from "./components/DataPlot";
+import HyperQueryBox from "./components/HyperQueryBox";
+import { prev } from "cheerio/lib/api/traversing";
 
 const Page = () => {
   const [isUploadOpen, setUploadOpen] = useState(true);
@@ -22,14 +24,16 @@ const Page = () => {
   useEffect(() => {
     onUploadCSV(0);
   }, [file]);
-  const [plotData, setPlotData] = useState({
-    avg: [
-      "1.3846153846153846154",
-      "1.3437500000000000000",
-      "1.0857142857142857143",
-      "1.1666666666666666667",
-    ],
-    status: ["0.0", "1.0", "3.0", "2.0"],
+  const [plotData, setPlotData] = useState<Object>({
+    count: [],
+    condition: [],
+    // avg: [
+    //   "1.3846153846153846154",
+    //   "1.3437500000000000000",
+    //   "1.0857142857142857143",
+    //   "1.1666666666666666667",
+    // ],
+    // status: ["0.0", "1.0", "3.0", "2.0"],
   });
 
   // callback function that handles the csv upload
@@ -62,12 +66,60 @@ const Page = () => {
       setStringifiedTable(stb);
     } else console.log(" upload failed");
   };
+
   // Disable all side-effects of dropping files, set file when dropped
   const onDrop = async (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     onUploadCSV(e);
     setFile(e.dataTransfer.files?.[0]);
+  };
+
+  // callback function that handles the SQL query
+  const onQuery = async (qry: string) => {
+    const res = await fetch("/api/dbshim", {
+      method: "POST",
+      headers: {
+        qry: qry,
+      },
+    }).then((rslt: any) => rslt.json());
+    if (res?.success) {
+      const rst = res?.props?.sql_result;
+      if (rst["count"] != undefined) {
+        setPlotData({
+          // get the first and the only count
+          count: [rst["count"][0]],
+          condition: ["Original"],
+        });
+        console.log({
+          // get the first and the only count
+          count: [rst["count"][0]],
+          condition: ["original"],
+        });
+      } else {
+        setPlotData(rst);
+      }
+    }
+  };
+
+  // callback function that handles hypothetical update query
+  const onHyperQuery = async (Ac: string, c: string) => {
+    // we don't allow hyper query if no SQL query is issued
+    if (!plotData) return;
+    const res = await fetch("/api/whatif", {
+      method: "POST",
+      headers: {
+        Ac: Ac,
+        c: c,
+      },
+    }).then((rslt: any) => rslt.json());
+    const rst = res?.props?.hyper_result;
+    if (res?.success) {
+      setPlotData((prevState) => ({
+        count: [...prevState.count, rst["updated"]],
+        condition: [...prevState.condition, "updating " + Ac + " to " + c],
+      }));
+    }
   };
 
   return (
@@ -98,7 +150,11 @@ const Page = () => {
           </div>
           <DataFrame text={stringifiedTable}></DataFrame>
         </div>
-        <QueryBox />
+        <HyperQueryBox onHyperQuery={onHyperQuery} />
+        <QueryBox onQuery={onQuery} />
+        <span className=" flex items-center pr-3 pointer-events-none text-gray-400">
+          Press ⮐ to send
+        </span>
       </div>
 
       {/* <div className="flex w-full flex-grow overflow-hidden relative">

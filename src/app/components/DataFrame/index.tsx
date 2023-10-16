@@ -19,7 +19,7 @@ const DataFrame: React.FC<DataFrameProps> = ({ text }) => {
           border: "1px solid black",
         }}
       >
-        <thead style={{ display: "block" }}>
+        <thead style={{}}>
           <tr style={{ border: "1px solid black" }}>
             {headers?.map((header, i) => (
               <th style={{ border: "1px solid black" }} key={i}>

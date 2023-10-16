@@ -24,9 +24,13 @@ interface DataPlotProps {
 }
 const DataPlot: React.FC<DataPlotProps> = ({ plotData }) => {
   if (!plotData) return null;
-  const [xLabel, yLabel] = Object.keys(plotData);
-  const xSeries = plotData[xLabel];
-  const ySeries = plotData[yLabel];
+  var [xLabel, yLabel] = Object.keys(plotData);
+  var xSeries: any[];
+  var ySeries;
+  xSeries = plotData[xLabel];
+  if (xSeries.length == 0) return null;
+  ySeries = plotData[yLabel];
+
   return (
     <div className="flex w-full flex-grow overflow-hidden relative">
       <Bar
