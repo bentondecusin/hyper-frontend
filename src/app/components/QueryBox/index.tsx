@@ -21,11 +21,12 @@ const QueryBox: React.FC<QueryBoxProps> = ({ onQuery }) => {
     // formRef.current?.reset();
   };
   return (
-    <div className="border-2 border-gray-600 rounded-lg overflow-y-scroll  flex flex-col justify-end bg-white">
+    <div>
       <form
         ref={formRef}
         onSubmit={onQuerySubmit}
-        className="relative bg-gray-700 rounded-lg"
+        className="border-2 border-gray-600 rounded-lg overflow-y-scroll  flex flex-col justify-end bg-white"
+        // className="relative bg-gray-700 rounded-lg"
       >
         <label htmlFor="sqlQuery"></label>
         {/* <textarea
