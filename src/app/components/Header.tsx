@@ -5,7 +5,7 @@ import { AiFillGithub, AiOutlineInfoCircle } from "react-icons/ai";
 export default function Header({ className }: { className?: string }) {
   return (
     <header
-      className={`flex items-center justify-center text-gray-200 text-2xl ${className}`}
+      className={`flex items-center justify-center text-gray-200 text-l ${className}`}
     >
       <Link
         href="https://arxiv.org/pdf/2203.14692.pdf"

@@ -1,3 +1,6 @@
+// `pages/_app.js`
+import "../../globals.css";
+import { useRef } from "react";
 interface DataFrameProps {
   text: string;
 }
@@ -7,12 +10,11 @@ const DataFrame: React.FC<DataFrameProps> = ({ text }) => {
   const data: string[][] = lines.map((line) => line.split(","));
   const headers = data[0];
   const rows = data.slice(1);
+  console.log(text);
   return (
-    <div
-      style={{ background: "lightgreen" }}
-      className="flex w-full flex-grow overflow-hidden relative"
-    >
-      <table
+    <div className="flex w-full flex-grow overflow-hidden relative">
+      {/* <table
+        className="fancy-table"
         style={{
           overflowX: "scroll",
           display: "block",
@@ -51,7 +53,16 @@ const DataFrame: React.FC<DataFrameProps> = ({ text }) => {
             );
           })}
         </tbody>
-      </table>
+      </table> */}
+      <div
+        style={{
+          overflowX: "scroll",
+          display: "block",
+          border: "1px solid black",
+          color: "white",
+        }}
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
     </div>
   );
 };

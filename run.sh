@@ -13,3 +13,4 @@ IMPORT INTO german (month,age,credit,installment_plans,credit_amount,number_of_c
 SELECT * FROM german;
 
 SELECT AVG(credit) , status FROM german GROUP BY status;
+SELECT COUNT(credit) , status FROM german GROUP BY status;

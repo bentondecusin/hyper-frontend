@@ -20,7 +20,6 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({ onHyperQuery }) => {
     e.preventDefault();
     // Only query if both inputs have values
     if (input_AcRef.current && input_cRef.current) {
-      console.log(input_AcRef.current?.value, input_cRef.current?.value);
       onHyperQuery(input_AcRef.current?.value, input_cRef.current?.value);
     }
     // formRef.current?.reset();
@@ -46,7 +45,7 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({ onHyperQuery }) => {
           <input
             ref={input_AcRef}
             onSubmit={onQuerySubmit}
-            style={{ background: "tomato", color: "black" }}
+            style={{ background: "white", color: "black" }}
             className=" input-glow appearance-none border rounded w-full py-2 px-3 text-black-200 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-10 bg-gray-600 border-gray-600 transition-shadow duration-200"
             // value={input}
             type="text"
@@ -61,7 +60,7 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({ onHyperQuery }) => {
           <input
             ref={input_cRef}
             onSubmit={onQuerySubmit}
-            style={{ background: "tomato", color: "black" }}
+            style={{ background: "white", color: "black" }}
             className="input-glow appearance-none border rounded w-full py-2 px-3 text-black-200 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-10 bg-gray-600 border-gray-600 transition-shadow duration-200"
             type="text"
             name="text"
