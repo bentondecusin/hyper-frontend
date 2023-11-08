@@ -10,7 +10,6 @@ const DataFrame: React.FC<DataFrameProps> = ({ text }) => {
   const data: string[][] = lines.map((line) => line.split(","));
   const headers = data[0];
   const rows = data.slice(1);
-  console.log(text);
   return (
     <div className="flex w-full flex-grow overflow-hidden relative">
       {/* <table

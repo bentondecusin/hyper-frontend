@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { data } from "cheerio/lib/api/attributes";
 
 ChartJS.register(
   CategoryScale,
@@ -33,7 +34,7 @@ const DataPlot: React.FC<DataPlotProps> = ({ plotData }) => {
 
   return (
     <div className="flex w-full flex-grow overflow-hidden relative">
-      <Bar
+      {/* <Bar
         // options={...}
         data={{
           labels: ySeries,
@@ -45,7 +46,8 @@ const DataPlot: React.FC<DataPlotProps> = ({ plotData }) => {
           ],
         }}
         // {...props}
-      />
+      /> */}
+      <Bar options={plotData["options"]} data={plotData["data"]}></Bar>
     </div>
   );
 };

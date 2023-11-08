@@ -80,30 +80,18 @@ const Page = () => {
 
   // callback function that handles the SQL query
   const onQuery = async (qry: string) => {
-    const res = await fetch("/api/dbshim", {
+    const res = await fetch("/api/SQL", {
       method: "POST",
       headers: {
         qry: qry,
       },
-    }).then((rslt: any) => rslt.json());
-
-    if (res?.success) {
-      const sql_rslt = res?.props?.sql_result;
-      if (sql_rslt["count"] != undefined) {
-        setPlotData({
-          // get the fisql_rslt and the only count
-          count: [sql_rslt["count"][0]],
-          condition: ["Original"],
-        });
-        console.log({
-          // get the fisql_rslt and the only count
-          count: [sql_rslt["count"][0]],
-          condition: ["original"],
-        });
-      } else {
+    }).then((res) =>
+      res.json().then((data) => {
+        const sql_rslt = JSON.parse(data.data);
+        console.log(sql_rslt);
         setPlotData(sql_rslt);
-      }
-    }
+      })
+    );
   };
 
   // callback function that handles hypothetical update query
