@@ -4,7 +4,6 @@ import React, { FormEvent, ChangeEvent, useState, useEffect } from "react";
 import QueryBox from "../QueryBox";
 interface UpInitProps {
   isOpen: boolean;
-
   uploadValid: boolean;
   uploadInfo: string[];
   onClose: () => void;

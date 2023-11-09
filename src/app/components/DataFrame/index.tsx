@@ -3,9 +3,10 @@ import "../../globals.css";
 import { useRef } from "react";
 interface DataFrameProps {
   text: string;
+  uploadValid: boolean;
 }
-const DataFrame: React.FC<DataFrameProps> = ({ text }) => {
-  if (!text) return null;
+const DataFrame: React.FC<DataFrameProps> = ({ text, uploadValid }) => {
+  if (!text || !uploadValid) return null;
   const lines: string[] = text.split("\n");
   const data: string[][] = lines.map((line) => line.split(","));
   const headers = data[0];

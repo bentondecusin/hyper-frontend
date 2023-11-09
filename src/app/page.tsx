@@ -23,17 +23,7 @@ const Page = () => {
   useEffect(() => {
     onUploadCSV(0);
   }, [file]);
-  const [plotData, setPlotData] = useState<Object>({
-    count: [],
-    condition: [],
-    // avg: [
-    //   "1.3846153846153846154",
-    //   "1.3437500000000000000",
-    //   "1.0857142857142857143",
-    //   "1.1666666666666666667",
-    // ],
-    // status: ["0.0", "1.0", "3.0", "2.0"],
-  });
+  const [plotData, setPlotData] = useState<Object>({});
 
   // callback function that handles the csv upload
   const onUploadCSV = async (e: any) => {
@@ -97,21 +87,20 @@ const Page = () => {
   // callback function that handles hypothetical update query
   const onHyperQuery = async (Ac: string, c: string) => {
     // we don't allow hyper query if no SQL query is issued
-    if (!plotData) return;
-    const res = await fetch("/api/whatif", {
+    if (!plotData || Object.keys(plotData).length === 0) return;
+    const res = await fetch("/api/whatif_qry", {
       method: "POST",
       headers: {
         Ac: Ac,
         c: c,
       },
-    }).then((rslt: any) => rslt.json());
-    const sql_rslt = res?.props?.hyper_result;
-    if (res?.success) {
-      setPlotData((prevState: { count: any[]; condition: any[] }) => ({
-        count: [...prevState["count"], sql_rslt["updated"]],
-        condition: [...prevState["condition"], "updating " + Ac + " to " + c],
-      }));
-    }
+    }).then((res) =>
+      res.json().then((data) => {
+        const sql_rslt = JSON.parse(data.data);
+        console.log(sql_rslt);
+        setPlotData(sql_rslt);
+      })
+    );
   };
   return (
     <div className="flex flex-col justify-between h-screen bg-gray-800 p-2 mx-auto max-w-full">
@@ -139,10 +128,16 @@ const Page = () => {
           >
             <DataPlot plotData={plotData} />
           </div>
-          <DataFrame text={stringifiedTable}></DataFrame>
+          <DataFrame
+            text={stringifiedTable}
+            uploadValid={uploadValid}
+          ></DataFrame>
         </div>
-        <HyperQueryBox onHyperQuery={onHyperQuery} />
-        <QueryBox onQuery={onQuery} />
+        <HyperQueryBox
+          onHyperQuery={onHyperQuery}
+          hasPlot={plotData && Object.keys(plotData).length !== 0}
+        />
+        <QueryBox onQuery={onQuery} uploadValid={uploadValid} />
         <span className=" flex items-center pr-3 pointer-events-none text-gray-400">
           Press ⮐ to send
         </span>

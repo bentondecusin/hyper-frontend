@@ -9,9 +9,14 @@ import React, {
 
 interface HyperQueryBoxProps {
   onHyperQuery: (attribute_name: string, attribute_val: string) => void;
+  hasPlot: boolean;
 }
 
-const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({ onHyperQuery }) => {
+const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
+  onHyperQuery,
+  hasPlot,
+}) => {
+  if (!hasPlot) return null;
   const formRef = React.useRef<any>(null);
   const input_AcRef = React.useRef<any>(null);
   const input_cRef = React.useRef<any>(null);

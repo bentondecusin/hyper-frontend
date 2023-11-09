@@ -11,7 +11,7 @@ export default function Header({ className }: { className?: string }) {
         href="https://arxiv.org/pdf/2203.14692.pdf"
         className="text-4xl ml-3 mr-3"
       >
-        <p>HypeR Demo</p>
+        <p>Hypothetical Reasoning</p>
       </Link>
 
       <Link
