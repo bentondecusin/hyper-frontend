@@ -23,12 +23,12 @@ const QueryBox: React.FC<QueryBoxProps> = ({ onQuery, uploadValid }) => {
     // formRef.current?.reset();
   };
   return (
-    <div>
-      <span className=" flex items-center pr-3 pointer-events-none ">
+    <div className="w-full h-full m-1 p-1">
+      <span className="flex p-1 items-center pr-3 pointer-events-none ">
         Enter SQL query here:
       </span>
       <form
-        className=" flex items-center h-96"
+        className="flex p-1 items-center h-20 "
         ref={formRef}
         onSubmit={onQuerySubmit}
         // className="relative bg-gray-700 rounded-lg"
@@ -44,7 +44,7 @@ const QueryBox: React.FC<QueryBoxProps> = ({ onQuery, uploadValid }) => {
           ref={inputRef}
           onSubmit={onQuerySubmit}
           style={{ background: "white", color: "black" }}
-          className="input-glow appearance-none border rounded w-full h-full whitespace-pre-line py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-3 bg-gray-600 border-gray-600 transition-shadow duration-200"
+          className="input-glow appearance-none border rounded w-full h-full whitespace-pre-line py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-3 bg-gray-600 border-gray-600 transition-shadow duration-200 font-mono"
           defaultValue="SELECT COUNT(*) FROM german WHERE credit=1.0 "
           type="text"
           name="text"

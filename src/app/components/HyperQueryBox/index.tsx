@@ -33,7 +33,11 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
   };
   return (
     <div>
-      <form ref={formRef} onSubmit={onQuerySubmit}>
+      <form
+        className="flex flex-row m-2"
+        ref={formRef}
+        onSubmit={onQuerySubmit}
+      >
         <label htmlFor="sqlQuery"></label>
         {/* <textarea
           className="input-glow appearance-none border rounded w-full py-2 px-3 text-gray-200 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-10 bg-gray-600 border-gray-600 transition-shadow duration-200"
@@ -42,7 +46,7 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
           rows="5"
         ></textarea> */}
         <div className="grow-0 py-2 px-3">
-          <h2>What if we update</h2>
+          <h2>update</h2>
         </div>
         <div className="grow-0">
           <input

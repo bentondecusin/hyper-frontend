@@ -9,15 +9,15 @@ export default function Header({ className }: { className?: string }) {
         href="https://arxiv.org/pdf/2203.14692.pdf"
         className="text-4xl ml-3 mr-3"
       >
-        <p>Causal Probabilistic DB</p>
+        <p> HypeR </p>
       </Link>
 
       <Link
         href="https://github.com/sainyam/Hyper-Code"
-        aria-label={"Hyper-Code Repo"}
+        aria-label={"Hyper-Code "}
         target="_blank"
       >
-        <div className="flex items-center justify-between max-h-7">
+        {/* <div className="flex items-center justify-between max-h-7">
           <div className="mr-3">
             <Image
               src="https://cis.cornell.edu/sites/default/themes/awp_cis/img/cis_full_2_line_red.png"
@@ -25,7 +25,7 @@ export default function Header({ className }: { className?: string }) {
               height={500}
               sizes="(max-height: 50px) 80vw, 33vw" alt={""}            />
           </div>
-        </div>
+        </div> */}
       </Link>
       {/* <button
         onClick={() => {

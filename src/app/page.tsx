@@ -121,15 +121,15 @@ const Page = () => {
         onDrop={onDrop}
       />
       <div className="flex w-full flex-grow overflow-hidden relative flex-row">
-        <div className="bg-blue-100 rounded-xl flex m-1 p-4 w-4/12 flex-grow overflow-hidden relative flex-col">
-          <div className="bg-blue-50 relative m-1 rounded-lg border-2  overflow-y-scroll flex flex-row justify-start bg-white">
+        <div className="bg-blue-100 rounded-xl flex m-1 p-4 flex-grow overflow-hidden relative flex-col w-7/12 ">
+          <div className="bg-blue-50 relative m-1 w-full h-3/12 rounded-lg border-2 overflow-y-scroll flex flex-row justify-start bg-white">
+            <QueryBox onQuery={onQuery} uploadValid={uploadValid} />
+          </div>
+          <div className="bg-blue-50 relative m-1 w-full grow rounded-lg border-2  overflow-y-scroll flex flex-row justify-start bg-white">
             <HyperQueryBox
               onHyperQuery={onHyperQuery}
               hasPlot={plotData && Object.keys(plotData).length !== 0}
             />
-          </div>
-          <div className="bg-blue-50 relative m-1 rounded-lg border-2 overflow-y-scroll flex flex-row justify-start bg-white">
-            <QueryBox onQuery={onQuery} uploadValid={uploadValid} />
           </div>
         </div>
         {uploadValid && (

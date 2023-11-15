@@ -26,7 +26,7 @@ const DataPlot: React.FC<DataPlotProps> = ({ plotData }) => {
   if (!plotData || Object.keys(plotData).length === 0) return null;
   const options = plotData["options"];
   options["indexAxis"] = "y" as const;
-  options["plugin"]["legend"] = {
+  options["plugin"] = {
     legend: {
       position: "right" as const,
     },
