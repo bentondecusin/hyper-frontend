@@ -9,7 +9,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { data } from "cheerio/lib/api/attributes";
 
 ChartJS.register(
   CategoryScale,
@@ -25,10 +24,16 @@ interface DataPlotProps {
 }
 const DataPlot: React.FC<DataPlotProps> = ({ plotData }) => {
   if (!plotData || Object.keys(plotData).length === 0) return null;
-
+  const options = plotData["options"];
+  options["indexAxis"] = "y" as const;
+  options["plugin"]["legend"] = {
+    legend: {
+      position: "right" as const,
+    },
+  };
   return (
     <div className="flex w-full flex-grow overflow-hidden relative">
-      <Bar options={plotData["options"]} data={plotData["data"]}></Bar>
+      <Bar options={options} data={plotData["data"]} />
     </div>
   );
 };

@@ -136,7 +136,7 @@ const Page = () => {
           </div>
         </div>
         {uploadValid && (
-          <div className="bg-pink-100 rounded-xl m-1 p-4 flex w-full flex-grow overflow-hidden relative flex-col">
+          <div className="bg-pink-100 rounded-xl m-1 flex w-full flex-grow overflow-hidden relative flex-col">
             {plotData && (
               <div className="bg-white rounded-xl m-1 border-red-200 border-4 flex w-full relative flex-grow ">
                 <DataPlot plotData={plotData} />

@@ -47,7 +47,7 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
             ref={input_AcRef}
             onSubmit={onQuerySubmit}
             style={{ background: "white", color: "black" }}
-            className=" input-glow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-10 bg-gray-600 border-gray-600 transition-shadow duration-200"
+            className=" input-glow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-3 bg-gray-600 border-gray-600 transition-shadow duration-200"
             // value={input}
             type="text"
             name="text"
@@ -62,7 +62,7 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
             ref={input_cRef}
             onSubmit={onQuerySubmit}
             style={{ background: "white", color: "black" }}
-            className="input-glow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-10 bg-gray-600 border-gray-600 transition-shadow duration-200"
+            className="input-glow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-3 bg-gray-600 border-gray-600 transition-shadow duration-200"
             type="text"
             name="text"
           />
