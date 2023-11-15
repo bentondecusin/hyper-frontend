@@ -4,14 +4,12 @@ import { AiFillGithub, AiOutlineInfoCircle } from "react-icons/ai";
 
 export default function Header({ className }: { className?: string }) {
   return (
-    <header
-      className={`flex items-center justify-center text-gray-200 text-l ${className}`}
-    >
+    <header className={`flex items-center justify-center text-l ${className}`}>
       <Link
         href="https://arxiv.org/pdf/2203.14692.pdf"
         className="text-4xl ml-3 mr-3"
       >
-        <p>Hypothetical Reasoning</p>
+        <p>Causal Probabilistic DB</p>
       </Link>
 
       <Link
@@ -19,9 +17,14 @@ export default function Header({ className }: { className?: string }) {
         aria-label={"Hyper-Code Repo"}
         target="_blank"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between max-h-7">
           <div className="mr-3">
-            <AiFillGithub size={"50px"} />
+            <Image
+              src="https://cis.cornell.edu/sites/default/themes/awp_cis/img/cis_full_2_line_red.png"
+              width={500}
+              height={500}
+              sizes="(max-height: 50px) 80vw, 33vw"
+            />
           </div>
         </div>
       </Link>

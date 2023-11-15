@@ -101,12 +101,12 @@
   border-style: dashed;
   border-color: #cbd5e1;
   background-color: #f8fafc;
-
 }
 
 #label-file-upload.drag-active {
   background-color: #ffffff00;
 }
+
 
 .upload-button {
   cursor: pointer;
@@ -129,23 +129,4 @@
   right: 0px;
   bottom: 0px;
   left: 0px;
-}
-
-tbody {
-  /* display: block; */
-  /* max-height: 500px; */
-  /* overflow-x: scroll; */
-}
-
-
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
 }

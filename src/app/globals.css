@@ -27,47 +27,22 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-.fancy-table {
-  border-collapse: collapse;
-  font-size: 0.9em;
-  font-family: sans-serif;
-  min-width: 400px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+table {
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.fancy-table thead tr {
-  background-color: #009879;
-  color: #ffffff;
-  text-align: left;
+th,
+td {
+  padding: 5px;
+  text-align: center;
+  min-width: 10px ;
+  border: 1px solid #ccc;
 }
 
-.fancy-table th,
-.fancy-table td {
-    padding: 12px 15px;
+thead {
+  position: sticky;
+  top:0;
+  background-color: lightcoral;
 }
 
-.fancy-table tbody tr {
-  border-bottom: 1px solid #dddddd;
-}
-
-.fancy-table tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
-  color: #000000;
-  border-right: 1px solid #dddddd;
-}
-
-.fancy-table tbody tr:nth-of-type(odd) {
-  background-color: #000000;
-  color: #ffffff;
-  border-right: 1px solid #000000;
-
-}
-
-.fancy-table tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
-}
-
-.fancy-table tbody tr.active-row {
-  font-weight: bold;
-  color: #009879;
-}

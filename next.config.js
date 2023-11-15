@@ -11,6 +11,16 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cis.cornell.edu",
+        port: "",
+        pathname: "/sites/**",
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

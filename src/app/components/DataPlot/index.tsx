@@ -27,20 +27,7 @@ const DataPlot: React.FC<DataPlotProps> = ({ plotData }) => {
   if (!plotData || Object.keys(plotData).length === 0) return null;
 
   return (
-    <div className="flex w-full flex-grow overflow-hidden relative">
-      {/* <Bar
-        // options={...}
-        data={{
-          labels: ySeries,
-          datasets: [
-            {
-              label: xLabel,
-              data: xSeries,
-            },
-          ],
-        }}
-        // {...props}
-      /> */}
+    <div>
       <Bar options={plotData["options"]} data={plotData["data"]}></Bar>
     </div>
   );

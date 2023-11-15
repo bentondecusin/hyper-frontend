@@ -49,7 +49,10 @@ const Page = () => {
           res.json().then((rslt: { success: number; data: string }) => {
             setStringifiedTable(rslt["data"]);
             setUploadValid(true);
-            setUploadInfo(["File " + file.name + " successfully uploaded  ✅"]);
+            setUploadInfo([
+              "File " + file.name + " successfully uploaded  ✅",
+              "Close the window or re-upload",
+            ]);
           });
         } else {
           console.log("upload failed; error code: " + res?.status);
@@ -103,7 +106,7 @@ const Page = () => {
     );
   };
   return (
-    <div className="flex flex-col justify-between h-screen bg-gray-800 p-2 mx-auto max-w-full">
+    <div className="flex flex-col justify-between h-screen bg-slate-100 p-2 mx-auto max-w-full">
       <Header className="my-5" />
 
       {/* <button
@@ -120,27 +123,31 @@ const Page = () => {
         handleUpload={onUploadCSV}
         onDrop={onDrop}
       />
-      <div className="flex w-full flex-grow overflow-hidden relative flex-col">
-        <div className="flex w-full flex-grow overflow-hidden relative flex-row">
-          <div
-            style={{ background: "lightgray" }}
-            className="flex w-full flex-grow overflow-hidden relative"
-          >
-            <DataPlot plotData={plotData} />
+      <div className="flex w-full flex-grow overflow-hidden relative flex-row">
+        <div className="bg-blue-100 rounded-xl flex m-1 w-4/12 flex-grow overflow-hidden relative flex-col">
+          <div className="bg-blue-50 relative m-1 rounded-lg border-2  overflow-y-scroll flex flex-row justify-start bg-white">
+            <HyperQueryBox
+              onHyperQuery={onHyperQuery}
+              hasPlot={plotData && Object.keys(plotData).length !== 0}
+            />
           </div>
-          <DataFrame
-            text={stringifiedTable}
-            uploadValid={uploadValid}
-          ></DataFrame>
+          <div className="bg-blue-50 relative m-1 rounded-lg border-2 overflow-y-scroll flex flex-row justify-start bg-white">
+            <QueryBox onQuery={onQuery} uploadValid={uploadValid} />
+          </div>
         </div>
-        <HyperQueryBox
-          onHyperQuery={onHyperQuery}
-          hasPlot={plotData && Object.keys(plotData).length !== 0}
-        />
-        <QueryBox onQuery={onQuery} uploadValid={uploadValid} />
-        <span className=" flex items-center pr-3 pointer-events-none text-gray-400">
-          Press ⮐ to send
-        </span>
+        {uploadValid && (
+          <div className="bg-pink-100 rounded-lg m-1 flex  w-full flex-grow overflow-hidden relative flex-col">
+            {plotData && (
+              <div className="bg-white rounded-lg m-1 border-red-200 border-4 flex w-full flex-grow relative">
+                <DataPlot plotData={plotData} />
+              </div>
+            )}
+
+            <div className="bg-white rounded-lg m-1 border-red-200 border-4 flex w-full flex-grow relative overflow-y-scroll ">
+              <DataFrame text={stringifiedTable} uploadValid={uploadValid} />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* <div className="flex w-full flex-grow overflow-hidden relative">

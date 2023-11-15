@@ -14,3 +14,9 @@ SELECT * FROM german;
 
 SELECT AVG(credit) , status FROM german GROUP BY status;
 SELECT COUNT(credit) , status FROM german GROUP BY status;
+
+# may give multiple rows
+SELECT AVG (credit) FROM german GROUP BY status
+
+# may give multiple columns
+SELECT AVG(credit), AVG(credit_history) FROM german WHERE credit=1.0 
