@@ -23,7 +23,7 @@ const Page = () => {
   useEffect(() => {
     onUploadCSV(0);
   }, [file]);
-  const [plotData, setPlotData] = useState<Object>({});
+  const [plotData, setPlotData] = useState<Object>();
 
   // callback function that handles the csv upload
   const onUploadCSV = async (e: any) => {
@@ -124,7 +124,7 @@ const Page = () => {
         onDrop={onDrop}
       />
       <div className="flex w-full flex-grow overflow-hidden relative flex-row">
-        <div className="bg-blue-100 rounded-xl flex m-1 w-4/12 flex-grow overflow-hidden relative flex-col">
+        <div className="bg-blue-100 rounded-xl flex m-1 p-4 w-4/12 flex-grow overflow-hidden relative flex-col">
           <div className="bg-blue-50 relative m-1 rounded-lg border-2  overflow-y-scroll flex flex-row justify-start bg-white">
             <HyperQueryBox
               onHyperQuery={onHyperQuery}
@@ -136,16 +136,18 @@ const Page = () => {
           </div>
         </div>
         {uploadValid && (
-          <div className="bg-pink-100 rounded-lg m-1 flex  w-full flex-grow overflow-hidden relative flex-col">
+          <div className="bg-pink-100 rounded-xl m-1 p-4 flex w-full flex-grow overflow-hidden relative flex-col">
             {plotData && (
-              <div className="bg-white rounded-lg m-1 border-red-200 border-4 flex w-full flex-grow relative">
+              <div className="bg-white rounded-xl m-1 border-red-200 border-4 flex w-full relative flex-grow ">
                 <DataPlot plotData={plotData} />
               </div>
             )}
 
-            <div className="bg-white rounded-lg m-1 border-red-200 border-4 flex w-full flex-grow relative overflow-y-scroll ">
-              <DataFrame text={stringifiedTable} uploadValid={uploadValid} />
-            </div>
+            {uploadValid && (
+              <div className="bg-white rounded-xl m-1 border-red-200 border-4 flex w-full relative overflow-y-scroll flex-grow">
+                <DataFrame text={stringifiedTable} uploadValid={uploadValid} />
+              </div>
+            )}
           </div>
         )}
       </div>
