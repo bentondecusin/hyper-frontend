@@ -23,8 +23,7 @@ export default function Header({ className }: { className?: string }) {
               src="https://cis.cornell.edu/sites/default/themes/awp_cis/img/cis_full_2_line_red.png"
               width={500}
               height={500}
-              sizes="(max-height: 50px) 80vw, 33vw"
-            />
+              sizes="(max-height: 50px) 80vw, 33vw" alt={""}            />
           </div>
         </div>
       </Link>

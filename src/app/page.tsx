@@ -1,10 +1,7 @@
 // page.tsx
 "use client";
-import { Context } from "@/components/Context";
 import Header from "@/components/Header";
-import Query from "@/components/QueryBox";
-import { useChat } from "ai/react";
-import InstructionModal from "./components/InstructionModal";
+// import InstructionModal from "./components/InstructionModal";
 import UpInit from "./components/UpInit";
 import { useEffect, useState } from "react";
 import QueryBox from "@/components/QueryBox";

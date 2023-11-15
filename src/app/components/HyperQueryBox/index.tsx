@@ -11,7 +11,7 @@ import React, {
 
 interface HyperQueryBoxProps {
   onHyperQuery: (attribute_name: string, attribute_val: string) => void;
-  hasPlot: boolean;
+  hasPlot: boolean | undefined;
 }
 
 const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
