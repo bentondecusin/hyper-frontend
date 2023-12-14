@@ -15,7 +15,19 @@ const Page = () => {
   const [uploadInfo, setUploadInfo] = useState<string[]>([
     "No file has been uploaded",
   ]);
+
+  // By default: horizontal; could be vertical, stacked
+  const [plotMode, setPlotMode] = useState<string>("horizontal");
+
+  // Keys in table; e.g. month, credit, etc
+  // If selected in what if, then it's used
+  const [unusedKeys, setUnusedKeys] = useState(new Set());
+  const [usedKeys, setUsedKeys] = useState(new Set());
+
+  // Preview of data table. Rendered in DataFrame component
   const [stringifiedTable, setStringifiedTable] = useState<string>("");
+
+  // Uploaded file in File type
   const [file, setFile] = useState<File>();
   useEffect(() => {
     onUploadCSV(0);
@@ -25,7 +37,6 @@ const Page = () => {
   // callback function that handles the csv upload
   const onUploadCSV = async (e: any) => {
     if (!file) return;
-
     // Remove default handler
     e && e.preventDefault();
 
@@ -43,14 +54,20 @@ const Page = () => {
     })
       .then((res: Response) => {
         if (res?.status == 200) {
-          res.json().then((rslt: { success: number; data: string }) => {
-            setStringifiedTable(rslt["data"]);
-            setUploadValid(true);
-            setUploadInfo([
-              "File " + file.name + " successfully uploaded  ✅",
-              "Close the window or re-upload",
-            ]);
-          });
+          res
+            .json()
+            .then(
+              (rslt: { success: number; data: string; header: string[] }) => {
+                setStringifiedTable(rslt["data"]);
+                setUnusedKeys((prevSet) => new Set(rslt["header"]));
+                setUsedKeys((prevSet) => new Set());
+                setUploadValid(true);
+                setUploadInfo([
+                  "File " + file.name + " successfully uploaded  ✅",
+                  "Close the window or re-upload",
+                ]);
+              }
+            );
         } else {
           console.log("upload failed; error code: " + res?.status);
         }
@@ -85,14 +102,20 @@ const Page = () => {
   };
 
   // callback function that handles hypothetical update query
-  const onHyperQuery = async (Ac: string, c: string) => {
+  const onHyperQuery = async (
+    lst: Array<{ Ac: string; c: string }>,
+    plotMode: string
+  ) => {
     // we don't allow hyper query if no SQL query is issued
     if (!plotData || Object.keys(plotData).length === 0) return;
+    const Ac = lst.map((val, _) => val["Ac"]).join();
+    const c = lst.map((val, _) => val["c"]).join();
     const res = await fetch("/api/whatif_qry", {
       method: "POST",
       headers: {
         Ac: Ac,
         c: c,
+        plotMode: plotMode,
       },
     }).then((res) =>
       res.json().then((data) => {
@@ -121,7 +144,7 @@ const Page = () => {
         onDrop={onDrop}
       />
       <div className="flex w-full flex-grow overflow-hidden relative flex-row">
-        <div className="bg-blue-100 rounded-xl flex m-1 p-4 flex-grow overflow-hidden relative flex-col w-7/12 ">
+        <div className="bg-blue-100 rounded-xl flex m-1 p-4 flex-grow overflow-hidden relative flex-col w-8/12 ">
           <div className="bg-blue-50 relative m-1 w-full h-3/12 rounded-lg border-2 overflow-y-scroll flex flex-row justify-start bg-white">
             <QueryBox onQuery={onQuery} uploadValid={uploadValid} />
           </div>
@@ -129,6 +152,8 @@ const Page = () => {
             <HyperQueryBox
               onHyperQuery={onHyperQuery}
               hasPlot={plotData && Object.keys(plotData).length !== 0}
+              unSelectedKeys={unusedKeys}
+              selectedKeys={usedKeys}
             />
           </div>
         </div>
@@ -136,7 +161,7 @@ const Page = () => {
           <div className="bg-pink-100 rounded-xl m-1 flex w-full flex-grow overflow-hidden relative flex-col">
             {plotData && (
               <div className="bg-white rounded-xl m-1 border-red-200 border-4 flex w-full relative flex-grow ">
-                <DataPlot plotData={plotData} />
+                <DataPlot plotData={plotData} plotMode={plotMode} />
               </div>
             )}
 

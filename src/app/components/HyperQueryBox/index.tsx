@@ -8,15 +8,20 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import HyperEntry from "./HyperEntry";
 
 interface HyperQueryBoxProps {
-  onHyperQuery: (attribute_name: string, attribute_val: string) => void;
+  onHyperQuery: (lst: Array<{ Ac: string; c: string }>) => void;
   hasPlot: boolean | undefined;
+  unSelectedKeys: Set<string>;
+  selectedKeys: Set<string>;
 }
 
 const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
   onHyperQuery,
   hasPlot,
+  unSelectedKeys,
+  selectedKeys,
 }) => {
   if (!hasPlot) return null;
   const formRef = React.useRef<any>(null);
@@ -26,54 +31,75 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
   const onQuerySubmit = async (e: any) => {
     e.preventDefault();
     // Only query if both inputs have values
-    if (input_AcRef.current && input_cRef.current) {
-      onHyperQuery(input_AcRef.current?.value, input_cRef.current?.value);
-    }
+    onHyperQuery(hypoUpdateList);
+
     // formRef.current?.reset();
+  };
+
+  const [hypoUpdateList, setHypoUpdateList] = useState([{ Ac: "", c: "" }]);
+
+  // when user updates a field in hypo update list
+  const handleFieldChange = (e: Event, idx: Number) => {
+    const { name, value } = e.target;
+    const lst = [...hypoUpdateList];
+    lst[idx][name] = value;
+    setHypoUpdateList(lst);
+  };
+
+  // when user removes an entire field
+  const handleFieldRemove = (idx: number) => {
+    const lst = [...hypoUpdateList];
+    lst.splice(idx, 1);
+    console.log(lst);
+    setHypoUpdateList(lst);
+  };
+
+  // when user adds an entire field
+  const handleFieldAdd = () => {
+    setHypoUpdateList([...hypoUpdateList, { Ac: "", c: "" }]);
   };
   return (
     <div>
+      <div className="grow-0 py-2 px-3 align-center">
+        <h2> What if </h2>
+      </div>
       <form
-        className="flex flex-row m-2"
+        className="flex flex-col m-2 bg-red-400"
         ref={formRef}
         onSubmit={onQuerySubmit}
       >
-        <label htmlFor="sqlQuery"></label>
-        {/* <textarea
-          className="input-glow appearance-none border rounded w-full py-2 px-3 text-gray-200 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-10 bg-gray-600 border-gray-600 transition-shadow duration-200"
-          id="sqlQuery"
-          name="sqlQuery"
-          rows="5"
-        ></textarea> */}
-        <div className="grow-0 py-2 px-3">
-          <h2>update</h2>
-        </div>
-        <div className="grow-0">
-          <input
-            ref={input_AcRef}
-            onSubmit={onQuerySubmit}
-            style={{ background: "white", color: "black" }}
-            className=" input-glow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-3 bg-gray-600 border-gray-600 transition-shadow duration-200"
-            // value={input}
-            type="text"
-            name="text"
-          />
-        </div>
+        {/* This section contains fields, each has 2 inputs (attribute, value) */}
 
-        <div className="grow-0 py-2 px-3 ">
-          <h2>to </h2>
-        </div>
-        <div className="grow-0">
-          <input
-            ref={input_cRef}
-            onSubmit={onQuerySubmit}
-            style={{ background: "white", color: "black" }}
-            className="input-glow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-3 bg-gray-600 border-gray-600 transition-shadow duration-200"
-            type="text"
-            name="text"
+        {hypoUpdateList.map((singleField, idx) => (
+          <HyperEntry
+            Ac={singleField["Ac"]}
+            c={singleField["c"]}
+            idx={idx}
+            unSelectedKeys={unSelectedKeys}
+            handleFieldRemove={handleFieldRemove}
+            handleFieldChange={handleFieldChange}
+            onQuerySubmit={onQuerySubmit}
           />
+        ))}
+
+        {/* This section has one button that allows users to add field */}
+        <div className="flex flex-center content-center">
+          <button
+            className="bg-red-400 text-center m-1 p-1 rounded-lg border-2"
+            type="button"
+            onClick={handleFieldAdd}
+          >
+            More key +
+          </button>
         </div>
-        <input type="submit" hidden />
+        <div className="bg-green-400">
+          <button
+            className="bg-red-400 text-center m-1 p-1 rounded-lg border-2"
+            onClick={onQuerySubmit}
+          >
+            <input type="submit" />
+          </button>
+        </div>
       </form>
     </div>
   );

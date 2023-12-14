@@ -21,6 +21,7 @@ ChartJS.register(
 
 interface DataPlotProps {
   plotData: any;
+  plotMode: string;
 }
 const DataPlot: React.FC<DataPlotProps> = ({ plotData }) => {
   if (!plotData || Object.keys(plotData).length === 0) return null;
@@ -34,6 +35,7 @@ const DataPlot: React.FC<DataPlotProps> = ({ plotData }) => {
   return (
     <div className="flex w-full flex-grow overflow-hidden relative">
       <Bar options={options} data={plotData["data"]} />
+
     </div>
   );
 };
