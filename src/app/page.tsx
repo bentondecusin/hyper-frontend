@@ -8,6 +8,7 @@ import QueryBox from "@/components/QueryBox";
 import DataFrame from "./components/DataFrame";
 import DataPlot from "./components/DataPlot";
 import HyperQueryBox from "./components/HyperQueryBox";
+import { astVisitor, parseFirst } from "pgsql-ast-parser";
 
 const Page = () => {
   const [isUploadOpen, setUploadOpen] = useState(true);
@@ -26,6 +27,7 @@ const Page = () => {
 
   // Preview of data table. Rendered in DataFrame component
   const [stringifiedTable, setStringifiedTable] = useState<string>("");
+  const [sqlInfo, setSqlInfo] = useState<Object>({});
 
   // Uploaded file in File type
   const [file, setFile] = useState<File>();
@@ -85,6 +87,18 @@ const Page = () => {
     setFile(e.dataTransfer.files?.[0]);
   };
 
+  const extract_sql_info = (qry: string) => {
+    const parsed = parseFirst(qry);
+    const q_type = parsed.columns[0].expr.function.name;
+    const newSqlInfo = {
+      q_type: q_type,
+      postlst: [parsed.where.left.name],
+      postvallst: [parsed.where.right.value],
+    };
+    setSqlInfo(newSqlInfo);
+    console.log(sqlInfo);
+  };
+
   // callback function that handles the SQL query
   const onQuery = async (qry: string) => {
     const res = await fetch("/api/SQL", {
@@ -96,6 +110,7 @@ const Page = () => {
       res.json().then((data) => {
         const sql_rslt = JSON.parse(data.data);
         console.log(sql_rslt);
+        extract_sql_info(qry);
         setPlotData(sql_rslt);
       })
     );
@@ -110,11 +125,16 @@ const Page = () => {
     if (!plotData || Object.keys(plotData).length === 0) return;
     const Ac = lst.map((val, _) => val["Ac"]).join();
     const c = lst.map((val, _) => val["c"]).join();
+
     const res = await fetch("/api/whatif_qry", {
       method: "POST",
       headers: {
         Ac: Ac,
         c: c,
+        postlst: sqlInfo["postlst"].join(),
+        postvallst: sqlInfo["postvallst"].join(),
+        qry_type: sqlInfo["q_type"],
+
         plotMode: plotMode,
       },
     }).then((res) =>

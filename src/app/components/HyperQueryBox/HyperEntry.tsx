@@ -22,7 +22,7 @@ const HyperEntry: React.FC<HyperEntryProps> = ({
   onQuerySubmit,
 }) => {
   return (
-    <div className="bg-blue-400 flex flex-row">
+    <div className="flex flex-row border rounded border-gray-600">
       <div className="grow-0 flex flex-row">
         <div className="grow-0 py-1">
           <h2 className="text-center m-1 p-1">update</h2>
@@ -35,7 +35,7 @@ const HyperEntry: React.FC<HyperEntryProps> = ({
             name="Ac"
             onChange={(e) => handleFieldChange(e, idx)}
           >
-            <option value="">--Select a key to update--</option>
+            <option value="">--Select a key--</option>
             {[...unSelectedKeys]?.map((attribute) =>
               attribute == Ac ? (
                 <option selected="selected">{attribute} </option>
@@ -62,7 +62,7 @@ const HyperEntry: React.FC<HyperEntryProps> = ({
         </div>
         <div className="grow-0 py-1 px-1 ">
           <button
-            className="bg-red-400 text-center m-1 p-1 rounded-lg border-2"
+            className=" text-center m-1 p-1 rounded-lg border-2"
             type="button"
             onClick={() => handleFieldRemove(idx)}
           >

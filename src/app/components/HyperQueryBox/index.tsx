@@ -64,7 +64,7 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
         <h2> What if </h2>
       </div>
       <form
-        className="flex flex-col m-2 bg-red-400"
+        className="flex flex-col m-2"
         ref={formRef}
         onSubmit={onQuerySubmit}
       >
@@ -83,21 +83,20 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
         ))}
 
         {/* This section has one button that allows users to add field */}
-        <div className="flex flex-center content-center">
+        <div className="flex flex-center flex-row content-center">
           <button
-            className="bg-red-400 text-center m-1 p-1 rounded-lg border-2"
+            className="text-center m-1 p-1 rounded-lg border-2"
             type="button"
             onClick={handleFieldAdd}
           >
             More key +
           </button>
-        </div>
-        <div className="bg-green-400">
           <button
-            className="bg-red-400 text-center m-1 p-1 rounded-lg border-2"
+            className="text-center m-1 p-1 rounded-lg border-2"
             onClick={onQuerySubmit}
           >
-            <input type="submit" />
+            Submit
+            {/* <input type="submit"></input> */}
           </button>
         </div>
       </form>
