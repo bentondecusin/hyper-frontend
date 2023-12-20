@@ -15,6 +15,7 @@ interface HyperQueryBoxProps {
   hasPlot: boolean | undefined;
   unSelectedKeys: Set<string>;
   selectedKeys: Set<string>;
+  setErrMsg: (errMsg: string) => void;
 }
 
 const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
@@ -22,6 +23,7 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
   hasPlot,
   unSelectedKeys,
   selectedKeys,
+  setErrMsg,
 }) => {
   if (!hasPlot) return null;
   const formRef = React.useRef<any>(null);
@@ -40,7 +42,7 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
 
   // when user updates a field in hypo update list
   const handleFieldChange = (e: Event, idx: Number) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target!;
     const lst = [...hypoUpdateList];
     lst[idx][name] = value;
     setHypoUpdateList(lst);

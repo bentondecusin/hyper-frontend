@@ -9,9 +9,18 @@ import DataFrame from "./components/DataFrame";
 import DataPlot from "./components/DataPlot";
 import HyperQueryBox from "./components/HyperQueryBox";
 import HelpBox from "./components/HelpBox";
+import ErrorBox from "./components/ErrorBox";
+import Swal from "sweetalert2";
+
 import { Helpcenter, FolderUpload } from "@icon-park/react";
 
-import { astVisitor, parseFirst } from "pgsql-ast-parser";
+import {
+  astVisitor,
+  parseFirst,
+  SelectStatement,
+  Statement,
+} from "pgsql-ast-parser";
+import ErrorBoundary from "next/dist/client/components/error-boundary";
 
 interface Info {
   q_type: string;
@@ -21,6 +30,13 @@ interface Info {
 const Page = () => {
   const [isUploadOpen, setUploadOpen] = useState(true);
   const [isHelpOpen, setHelpOpen] = useState(false);
+  const [hasError, setErrOn] = useState(false);
+
+  // When error exists, throw error component
+  const [errMsg, setErrMsg] = useState("");
+  // useEffect(() => {
+  //   setErrOn(true);
+  // }, [errMsg]);
 
   const [uploadValid, setUploadValid] = useState(false);
   const [uploadInfo, setUploadInfo] = useState<string[]>([
@@ -71,6 +87,13 @@ const Page = () => {
             .json()
             .then(
               (rslt: { success: number; data: string; header: string[] }) => {
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Upload Success",
+                  showConfirmButton: false,
+                  timer: 1000,
+                });
                 setStringifiedTable(rslt["data"]);
                 setUnusedKeys((prevSet) => new Set(rslt["header"]));
                 setUsedKeys((prevSet) => new Set());
@@ -98,19 +121,65 @@ const Page = () => {
     setFile(e.dataTransfer.files?.[0]);
   };
 
+  // TODO: can be relaxed
   const extract_sql_info = (qry: string) => {
-    const parsed = parseFirst(qry);
-    const q_type: string = parsed.columns[0].expr.function.name;
-    return {
-      q_type: q_type,
-      postlst: [parsed.where.left.name],
-      postvallst: [parsed.where.right.value],
-    };
+    try {
+      const parsed: Statement = parseFirst(qry);
+
+      // must be select type
+      if (parsed.type != "select") {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "SELECT query only",
+        });
+        return undefined;
+      }
+
+      const exp_file_name = file!.name.split(".")[0];
+      const got_file_name = parsed.from[0]["name"]["name"];
+
+      // must from 1 table and table names must match
+      if (parsed.from.length != 1 || exp_file_name != got_file_name) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          html:
+            '<pre class="text-left">' +
+            "table names not match: " +
+            "<br> expected: " +
+            exp_file_name +
+            "<br> got: " +
+            got_file_name +
+            "</pre>",
+        });
+        return undefined;
+      }
+
+      const q_type: string = parsed.columns[0].expr.function.name;
+      return {
+        q_type: q_type,
+        postlst: [parsed.where.left.name],
+        postvallst: [parsed.where.right.value],
+      };
+    } catch (e: any) {
+      Swal.fire({
+        icon: "error",
+        title: "SQL syntax error:",
+        html:
+          '<pre class="text-left">' +
+          e.message.replaceAll("\n", "<br>") +
+          "</pre>",
+        grow: "row",
+      });
+      return undefined;
+    }
   };
 
   // callback function that handles the SQL query
   const onQuery = async (qry: string) => {
     const newSqlInfo = extract_sql_info(qry);
+    if (newSqlInfo == undefined) return;
     if (!ALLOWED_Q_TYPE.includes(newSqlInfo.q_type.toUpperCase())) {
       alert(newSqlInfo.q_type.toUpperCase() + " query not supported");
       return;
@@ -120,14 +189,30 @@ const Page = () => {
       headers: {
         qry: qry,
       },
-    }).then((res) =>
-      res.json().then((data) => {
-        const sql_rslt = JSON.parse(data.data);
-        console.log(sql_rslt);
-        setSqlInfo(newSqlInfo);
-        setPlotData(sql_rslt);
-      })
-    );
+    }).then((res: Response) => {
+      if (res?.status == 200) {
+        res
+          .json()
+          .then((data) => {
+            const sql_rslt = JSON.parse(data.data);
+            console.log(sql_rslt);
+            setSqlInfo(newSqlInfo);
+            setPlotData(sql_rslt);
+          })
+          .catch((res) => {
+            console.log(res);
+          });
+      } else {
+        console.log(res);
+        res.json().then((data) => {
+          Swal.fire({
+            icon: "error",
+            title: "SQL query fails:",
+            text: data.error,
+          });
+        });
+      }
+    });
   };
 
   // callback function that handles hypothetical update query
@@ -152,6 +237,7 @@ const Page = () => {
       },
     }).then((res) =>
       res.json().then((data) => {
+        console.log(data);
         const sql_rslt = JSON.parse(data.data);
         console.log(sql_rslt);
         setPlotData(sql_rslt);
@@ -161,6 +247,11 @@ const Page = () => {
   return (
     <div className="flex flex-col justify-between h-screen bg-slate-100 p-2 mx-auto max-w-full">
       <Header className="my-5" />
+      <ErrorBox
+        isOpen={hasError}
+        onClose={() => setError(false)}
+        errorMsg={errMsg}
+      />
 
       {/* --------------------- HELP SECTION --------------------- */}
 
@@ -195,7 +286,11 @@ const Page = () => {
       <div className="flex w-full flex-grow overflow-hidden relative flex-row">
         <div className="bg-blue-100 rounded-xl flex m-1 p-4 flex-grow overflow-hidden relative flex-col w-8/12 ">
           <div className="bg-blue-50 relative m-1 w-full h-3/12 rounded-lg border-2 overflow-y-scroll flex flex-row justify-start bg-white">
-            <QueryBox onQuery={onQuery} uploadValid={uploadValid} />
+            <QueryBox
+              onQuery={onQuery}
+              uploadValid={uploadValid}
+              setErrMsg={setErrMsg}
+            />
           </div>
           <div className="bg-blue-50 relative m-1 w-full grow rounded-lg border-2  overflow-y-scroll flex flex-row justify-start bg-white">
             <HyperQueryBox
@@ -203,6 +298,7 @@ const Page = () => {
               hasPlot={plotData && Object.keys(plotData).length !== 0}
               unSelectedKeys={unusedKeys}
               selectedKeys={usedKeys}
+              setErrMsg={setErrMsg}
             />
           </div>
         </div>
@@ -224,20 +320,6 @@ const Page = () => {
           </div>
         )}
       </div>
-      {/* <div className="flex w-full flex-grow overflow-hidden relative">
-        <div className="absolute transform translate-x-full transition-transform duration-500 ease-in-out right-0 w-2/3 h-full bg-gray-700 overflow-y-auto lg:static lg:translate-x-0 lg:w-2/5 lg:mx-2 rounded-lg"></div>
-        <button
-          type="button"
-          className="absolute left-20 transform -translate-x-12 bg-gray-800 text-white rounded-l py-2 px-4 lg:hidden"
-          onClick={(e) => {
-            e.currentTarget.parentElement
-              ?.querySelector(".transform")
-              ?.classList.toggle("translate-x-full");
-          }}
-        >
-          ☰
-        </button>
-      </div> */}
     </div>
   );
 };

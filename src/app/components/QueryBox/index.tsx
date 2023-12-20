@@ -11,9 +11,14 @@ import React, {
 interface QueryBoxProps {
   onQuery: (s: string) => void;
   uploadValid: boolean;
+  setErrMsg: (errMsg: string) => void;
 }
 
-const QueryBox: React.FC<QueryBoxProps> = ({ onQuery, uploadValid }) => {
+const QueryBox: React.FC<QueryBoxProps> = ({
+  onQuery,
+  uploadValid,
+  setErrMsg,
+}) => {
   if (!uploadValid) return null;
   const formRef = React.useRef<any>(null);
   const inputRef = React.useRef<any>(null);
