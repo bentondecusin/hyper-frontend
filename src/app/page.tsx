@@ -125,7 +125,7 @@ const Page = () => {
   const extract_sql_info = (qry: string) => {
     try {
       const parsed: Statement = parseFirst(qry);
-
+      console.log(parsed);
       // must be select type
       if (parsed.type != "select") {
         Swal.fire({
@@ -235,14 +235,26 @@ const Page = () => {
         qt: sqlInfo!["q_type"],
         plotMode: plotMode,
       },
-    }).then((res) =>
-      res.json().then((data) => {
-        console.log(data);
-        const sql_rslt = JSON.parse(data.data);
-        console.log(sql_rslt);
-        setPlotData(sql_rslt);
-      })
-    );
+    }).then((res) => {
+      if (res?.status == 200) {
+        res.json().then((data) => {
+          console.log(data);
+          const sql_rslt = JSON.parse(data.data);
+          console.log(sql_rslt);
+          setPlotData(sql_rslt);
+        });
+      } else {
+        // TODO print more detailed error. Need to coordinate with backend
+        console.log(res);
+        res.json().then((data) => {
+          Swal.fire({
+            icon: "error",
+            title: "Hyper query fails:",
+            text: data.error,
+          });
+        });
+      }
+    });
   };
   return (
     <div className="flex flex-col justify-between h-screen bg-slate-100 p-2 mx-auto max-w-full">
