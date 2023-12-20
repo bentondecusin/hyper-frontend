@@ -8,10 +8,20 @@ import QueryBox from "@/components/QueryBox";
 import DataFrame from "./components/DataFrame";
 import DataPlot from "./components/DataPlot";
 import HyperQueryBox from "./components/HyperQueryBox";
+import HelpBox from "./components/HelpBox";
+import { Helpcenter, FolderUpload } from "@icon-park/react";
+
 import { astVisitor, parseFirst } from "pgsql-ast-parser";
 
+interface Info {
+  q_type: string;
+  postlst: Array<string>;
+  postvallst: Array<string>;
+}
 const Page = () => {
   const [isUploadOpen, setUploadOpen] = useState(true);
+  const [isHelpOpen, setHelpOpen] = useState(false);
+
   const [uploadValid, setUploadValid] = useState(false);
   const [uploadInfo, setUploadInfo] = useState<string[]>([
     "No file has been uploaded",
@@ -27,7 +37,7 @@ const Page = () => {
 
   // Preview of data table. Rendered in DataFrame component
   const [stringifiedTable, setStringifiedTable] = useState<string>("");
-  const [sqlInfo, setSqlInfo] = useState<Object>({});
+  const [sqlInfo, setSqlInfo] = useState<Info>();
 
   // Uploaded file in File type
   const [file, setFile] = useState<File>();
@@ -35,6 +45,7 @@ const Page = () => {
     onUploadCSV(0);
   }, [file]);
   const [plotData, setPlotData] = useState<Object>();
+  const ALLOWED_Q_TYPE = ["COUNT", "AVG"];
 
   // callback function that handles the csv upload
   const onUploadCSV = async (e: any) => {
@@ -89,18 +100,21 @@ const Page = () => {
 
   const extract_sql_info = (qry: string) => {
     const parsed = parseFirst(qry);
-    const q_type = parsed.columns[0].expr.function.name;
-    const newSqlInfo = {
+    const q_type: string = parsed.columns[0].expr.function.name;
+    return {
       q_type: q_type,
       postlst: [parsed.where.left.name],
       postvallst: [parsed.where.right.value],
     };
-    setSqlInfo(newSqlInfo);
-    console.log(sqlInfo);
   };
 
   // callback function that handles the SQL query
   const onQuery = async (qry: string) => {
+    const newSqlInfo = extract_sql_info(qry);
+    if (!ALLOWED_Q_TYPE.includes(newSqlInfo.q_type.toUpperCase())) {
+      alert(newSqlInfo.q_type.toUpperCase() + " query not supported");
+      return;
+    }
     const res = await fetch("/api/SQL", {
       method: "POST",
       headers: {
@@ -110,7 +124,7 @@ const Page = () => {
       res.json().then((data) => {
         const sql_rslt = JSON.parse(data.data);
         console.log(sql_rslt);
-        extract_sql_info(qry);
+        setSqlInfo(newSqlInfo);
         setPlotData(sql_rslt);
       })
     );
@@ -131,10 +145,9 @@ const Page = () => {
       headers: {
         Ac: Ac,
         c: c,
-        postlst: sqlInfo["postlst"].join(),
-        postvallst: sqlInfo["postvallst"].join(),
-        qry_type: sqlInfo["q_type"],
-
+        postlst: sqlInfo!["postlst"].join(),
+        postvallst: sqlInfo!["postvallst"].join(),
+        qt: sqlInfo!["q_type"],
         plotMode: plotMode,
       },
     }).then((res) =>
@@ -149,12 +162,28 @@ const Page = () => {
     <div className="flex flex-col justify-between h-screen bg-slate-100 p-2 mx-auto max-w-full">
       <Header className="my-5" />
 
-      {/* <button
-        onClick={() => setModalOpen(true)}
-        className="fixed right-4 top-4 md:right-6 md:top-6 text-xl text-white animate-pulse-once"
-      ></button> */}
+      {/* --------------------- HELP SECTION --------------------- */}
 
-      {/* <InstructionModal isOpen={true} onClose={() => setModalOpen(false)} /> */}
+      {/* Help button */}
+      <Helpcenter
+        className="fixed right-5 top-5 md:right-6 md:top-6 text-xl text-white animate-pulse-once help-button"
+        theme="outline"
+        onClick={() => setHelpOpen(true)}
+        size="50"
+        fill="#333"
+      />
+      {/* Help text */}
+      <HelpBox isOpen={isHelpOpen} onClose={() => setHelpOpen(false)} />
+
+      {/* --------------------- UPLOAD SECTION --------------------- */}
+      {/* NOTE: Upload button */}
+      <FolderUpload
+        className="fixed right-20 top-5 md:right-20 md:top-6 text-xl text-white animate-pulse-once upload-button"
+        theme="outline"
+        onClick={() => setUploadOpen(true)}
+        size="50"
+        fill="#333"
+      />
       <UpInit
         isOpen={isUploadOpen}
         onClose={() => setUploadOpen(false)}
@@ -184,7 +213,9 @@ const Page = () => {
                 <DataPlot plotData={plotData} plotMode={plotMode} />
               </div>
             )}
-
+            <div>
+              <h1 className="text-center">Table name: {file!.name}</h1>
+            </div>
             {uploadValid && (
               <div className="bg-white rounded-xl m-1 border-red-200 border-4 flex w-full relative overflow-y-scroll flex-grow">
                 <DataFrame text={stringifiedTable} uploadValid={uploadValid} />
@@ -193,7 +224,6 @@ const Page = () => {
           </div>
         )}
       </div>
-
       {/* <div className="flex w-full flex-grow overflow-hidden relative">
         <div className="absolute transform translate-x-full transition-transform duration-500 ease-in-out right-0 w-2/3 h-full bg-gray-700 overflow-y-auto lg:static lg:translate-x-0 lg:w-2/5 lg:mx-2 rounded-lg"></div>
         <button

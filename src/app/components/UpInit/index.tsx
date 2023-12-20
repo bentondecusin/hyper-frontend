@@ -95,7 +95,7 @@ const UpInit: React.FC<UpInitProps> = ({
           <label id="label-file-upload" htmlFor="file">
             <div>
               <button
-                className="upload-button"
+                className="upload-submit-button"
                 type="submit"
                 onClick={onSumbitButtonClick}
               >
