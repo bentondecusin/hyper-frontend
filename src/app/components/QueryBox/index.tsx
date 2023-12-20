@@ -49,7 +49,7 @@ const QueryBox: React.FC<QueryBoxProps> = ({
           ref={inputRef}
           onSubmit={onQuerySubmit}
           style={{ background: "white", color: "black" }}
-          className="input-glow appearance-none border rounded w-full h-full whitespace-pre-line py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-3 pr-3 bg-gray-600 border-gray-600 transition-shadow duration-200 font-mono"
+          className="input-glow appearance-none border rounded w-full whitespace-pre-line py-2 px-3 leading-tight  pl-3 pr-3 bg-gray-600 border-gray-600 transition-shadow duration-200 font-mono focus:outline-none focus:shadow-outline focus:fixed focus:h-5/12 focus:inset-x-10 focus:z-10 focus:place-content-center"
           defaultValue="SELECT COUNT(*) FROM german WHERE credit=1.0 "
           type="text"
           name="text"

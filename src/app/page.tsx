@@ -26,6 +26,7 @@ interface Info {
   q_type: string;
   postlst: Array<string>;
   postvallst: Array<string>;
+  AT?: string;
 }
 const Page = () => {
   const [isUploadOpen, setUploadOpen] = useState(true);
@@ -156,13 +157,23 @@ const Page = () => {
         return undefined;
       }
 
+      // TODO: support more columns
       const q_type: string = parsed.columns[0].expr.function.name;
-      return {
-        q_type: q_type,
-        postlst: [parsed.where.left.name],
-        postvallst: [parsed.where.right.value],
-      };
+      if (q_type == "count")
+        return {
+          q_type: q_type,
+          postlst: [parsed.where.left.name],
+          postvallst: [parsed.where.right.value],
+        };
+      else if (q_type == "avg")
+        return {
+          q_type: q_type,
+          AT: parsed.columns[0].expr.args[0].name,
+          postlst: [parsed.where.left.name],
+          postvallst: [parsed.where.right.value],
+        };
     } catch (e: any) {
+      console.log(e);
       Swal.fire({
         icon: "error",
         title: "SQL syntax error:",
@@ -195,7 +206,6 @@ const Page = () => {
           .json()
           .then((data) => {
             const sql_rslt = JSON.parse(data.data);
-            console.log(sql_rslt);
             setSqlInfo(newSqlInfo);
             setPlotData(sql_rslt);
           })
@@ -203,7 +213,6 @@ const Page = () => {
             console.log(res);
           });
       } else {
-        console.log(res);
         res.json().then((data) => {
           Swal.fire({
             icon: "error",
@@ -224,12 +233,12 @@ const Page = () => {
     if (!plotData || Object.keys(plotData).length === 0) return;
     const Ac = lst.map((val, _) => val["Ac"]).join();
     const c = lst.map((val, _) => val["c"]).join();
-
     const res = await fetch("/api/whatif_qry", {
       method: "POST",
       headers: {
         Ac: Ac,
         c: c,
+        AT: sqlInfo!["AT"],
         postlst: sqlInfo!["postlst"].join(),
         postvallst: sqlInfo!["postvallst"].join(),
         qt: sqlInfo!["q_type"],
@@ -238,9 +247,7 @@ const Page = () => {
     }).then((res) => {
       if (res?.status == 200) {
         res.json().then((data) => {
-          console.log(data);
           const sql_rslt = JSON.parse(data.data);
-          console.log(sql_rslt);
           setPlotData(sql_rslt);
         });
       } else {
