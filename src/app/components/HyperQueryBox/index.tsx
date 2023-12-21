@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable react-hooks/rules-of-hooks */
 
 "use client";
@@ -13,8 +14,7 @@ import HyperEntry from "./HyperEntry";
 interface HyperQueryBoxProps {
   onHyperQuery: (lst: Array<{ Ac: string; c: string }>) => void;
   hasPlot: boolean | undefined;
-  unSelectedKeys: Set<string>;
-  selectedKeys: Set<string>;
+  unSelectedKeys: Array<string>;
   setErrMsg: (errMsg: string) => void;
 }
 
@@ -22,7 +22,6 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
   onHyperQuery,
   hasPlot,
   unSelectedKeys,
-  selectedKeys,
   setErrMsg,
 }) => {
   if (!hasPlot) return null;
@@ -41,10 +40,14 @@ const HyperQueryBox: React.FC<HyperQueryBoxProps> = ({
   const [hypoUpdateList, setHypoUpdateList] = useState([{ Ac: "", c: "" }]);
 
   // when user updates a field in hypo update list
-  const handleFieldChange = (e: Event, idx: Number) => {
-    const { name, value } = e.target!;
+  const handleFieldChange = (e: any, idx: number) => {
+    const name: string = e!.target.name;
+    const value = e!.target.value;
+
     const lst = [...hypoUpdateList];
-    lst[idx][name] = value;
+    if (name == "Ac") lst[idx].Ac = value;
+    if (name == "c") lst[idx].c = value;
+
     setHypoUpdateList(lst);
   };
 

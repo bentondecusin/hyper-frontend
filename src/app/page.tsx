@@ -20,7 +20,7 @@ import {
   SelectStatement,
   Statement,
 } from "pgsql-ast-parser";
-import ErrorBoundary from "next/dist/client/components/error-boundary";
+import { assert } from "console";
 
 interface Info {
   q_type: string;
@@ -49,11 +49,13 @@ const Page = () => {
 
   // Keys in table; e.g. month, credit, etc
   // If selected in what if, then it's used
-  const [unusedKeys, setUnusedKeys] = useState(new Set());
-  const [usedKeys, setUsedKeys] = useState(new Set());
+  const [unusedKeys, setUnusedKeys] = useState<Array<string>>([]);
+  // const [usedKeys, setUsedKeys] = useState(new Set());
 
   // Preview of data table. Rendered in DataFrame component
   const [stringifiedTable, setStringifiedTable] = useState<string>("");
+  const [numRecord, setNumRecord] = useState("");
+
   const [sqlInfo, setSqlInfo] = useState<Info>();
 
   // Uploaded file in File type
@@ -75,7 +77,7 @@ const Page = () => {
       setUploadInfo(["Wrong format: csv file only.", "Got: " + file?.type]);
       return;
     }
-
+    console.log(file);
     const data = new FormData();
     data.set("file", file);
     const res = await fetch("/api/upload_csv", {
@@ -93,11 +95,12 @@ const Page = () => {
                   icon: "success",
                   title: "Upload Success",
                   showConfirmButton: false,
-                  timer: 1000,
+                  timer: 2000,
                 });
                 setStringifiedTable(rslt["data"]);
-                setUnusedKeys((prevSet) => new Set(rslt["header"]));
-                setUsedKeys((prevSet) => new Set());
+                setNumRecord(rslt!["header"].pop());
+                if (rslt.header == undefined) return;
+                setUnusedKeys((_) => [...rslt.header]);
                 setUploadValid(true);
                 setUploadInfo([
                   "File " + file.name + " successfully uploaded  ✅",
@@ -158,7 +161,7 @@ const Page = () => {
       }
 
       // TODO: support more columns
-      const q_type: string = parsed.columns[0].expr.function.name;
+      const q_type: string = parsed.columns[0].expr?.function.name;
       if (q_type == "count")
         return {
           q_type: q_type,
@@ -266,11 +269,6 @@ const Page = () => {
   return (
     <div className="flex flex-col justify-between h-screen bg-slate-100 p-2 mx-auto max-w-full">
       <Header className="my-5" />
-      <ErrorBox
-        isOpen={hasError}
-        onClose={() => setError(false)}
-        errorMsg={errMsg}
-      />
 
       {/* --------------------- HELP SECTION --------------------- */}
 
@@ -316,7 +314,6 @@ const Page = () => {
               onHyperQuery={onHyperQuery}
               hasPlot={plotData && Object.keys(plotData).length !== 0}
               unSelectedKeys={unusedKeys}
-              selectedKeys={usedKeys}
               setErrMsg={setErrMsg}
             />
           </div>
@@ -328,9 +325,14 @@ const Page = () => {
                 <DataPlot plotData={plotData} plotMode={plotMode} />
               </div>
             )}
-            <div>
-              <h1 className="text-center">Table name: {file!.name}</h1>
-            </div>
+            {uploadValid && (
+              <div>
+                <h1 className="text-center">
+                  Table name: {file!.name} (top 200/{numRecord})records are
+                  shown
+                </h1>
+              </div>
+            )}
             {uploadValid && (
               <div className="bg-white rounded-xl m-1 border-red-200 border-4 flex w-full relative overflow-y-scroll flex-grow">
                 <DataFrame text={stringifiedTable} uploadValid={uploadValid} />

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable react-hooks/rules-of-hooks */
 
 "use client";
@@ -6,10 +7,10 @@ interface HyperEntryProps {
   Ac: string;
   c: string;
   idx: number;
-  unSelectedKeys: Set<string>;
+  unSelectedKeys: Array<string>;
   handleFieldRemove: (idx: number) => void;
-  handleFieldChange: (e: Event, idx: number) => void;
-  onQuerySubmit: (e: Event) => void;
+  handleFieldChange: (e: any, idx: number) => void;
+  onQuerySubmit: (e: any) => void;
 }
 
 const HyperEntry: React.FC<HyperEntryProps> = ({
@@ -31,14 +32,13 @@ const HyperEntry: React.FC<HyperEntryProps> = ({
           <select
             style={{ background: "white", color: "black" }}
             className="input-glow appearance-none m-1 pt-1 pb-1 border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline pl-1 pr-1 bg-gray-600 border-gray-600 transition-shadow duration-200 text-center"
-            type="text"
             name="Ac"
             onChange={(e) => handleFieldChange(e, idx)}
           >
             <option value="">--Select a key--</option>
-            {[...unSelectedKeys]?.map((attribute) =>
+            {unSelectedKeys?.map((attribute) =>
               attribute == Ac ? (
-                <option selected="selected">{attribute} </option>
+                <option selected={true}>{attribute} </option>
               ) : (
                 <option>{attribute} </option>
               )
