@@ -313,7 +313,3 @@ def whatif_query():
 @app.route("/api/henlo")
 def hello_world():
     return "<p>henlo</p>"
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
