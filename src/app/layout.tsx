@@ -1,6 +1,7 @@
 export const metadata = {
-  title: "HypeR - Demo",
-  description: "HypeR - Demo",
+  title: "hyperDB",
+  description:
+    "hyperDB, a database that does probabilistic inference and hypothetical update",
 };
 
 import "../global.css";
