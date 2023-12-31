@@ -223,6 +223,8 @@ Tailwind css: [https://tailwindcss.com/docs/](https://tailwindcss.com/docs/)
 
 HTTP POST: [POST - HTTP | MDN (mozilla.org)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST)
 
+# Future Development Suggestions
+Switch from Chartjs to [Ploty](https://dash.plotly.com/tutorial), where one can create a visualizaiton on backend and return a raw HTML component.
 # **Website Usage appendix**
 
 [Website v.2.0 Usage](https://github.com/bentondecusin/hyper-frontend/README.md)
